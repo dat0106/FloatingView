@@ -27,14 +27,6 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
-import androidx.dynamicanimation.animation.DynamicAnimation;
-import androidx.dynamicanimation.animation.FlingAnimation;
-import androidx.dynamicanimation.animation.FloatValueHolder;
-import androidx.dynamicanimation.animation.SpringAnimation;
-import androidx.dynamicanimation.animation.SpringForce;
-import androidx.annotation.IntDef;
-import androidx.annotation.NonNull;
-import androidx.core.view.ViewCompat;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.KeyCharacterMap;
@@ -48,6 +40,15 @@ import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.animation.OvershootInterpolator;
 import android.widget.FrameLayout;
+
+import androidx.annotation.IntDef;
+import androidx.annotation.NonNull;
+import androidx.core.view.ViewCompat;
+import androidx.dynamicanimation.animation.DynamicAnimation;
+import androidx.dynamicanimation.animation.FlingAnimation;
+import androidx.dynamicanimation.animation.FloatValueHolder;
+import androidx.dynamicanimation.animation.SpringAnimation;
+import androidx.dynamicanimation.animation.SpringForce;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -870,6 +871,10 @@ class FloatingView extends FrameLayout implements ViewTreeObserver.OnPreDrawList
             }
             mIsMoveAccept = true;
             mAnimationHandler.updateTouchPosition(getXByTouch(), getYByTouch());
+            // Sometimes ACTION_MOVE is triggered without ACTION_DOWN before (#118)
+            if (mVelocityTracker == null) {
+                mVelocityTracker = VelocityTracker.obtain();
+            }
             // compute offset and restore
             addMovement(event);
         }
