@@ -28,7 +28,6 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
-import androidx.annotation.IntDef;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -39,6 +38,8 @@ import android.view.WindowManager;
 import android.view.animation.OvershootInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+
+import androidx.annotation.IntDef;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -215,6 +216,7 @@ class TrashView extends FrameLayout implements ViewTreeObserver.OnPreDrawListene
                 WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
         mParams.format = PixelFormat.TRANSLUCENT;
         // INFO:Windowの原点のみ左下に設定
+        mParams.alpha = 0.8f;
         mParams.gravity = Gravity.LEFT | Gravity.BOTTOM;
 
         // 各種Viewの設定
