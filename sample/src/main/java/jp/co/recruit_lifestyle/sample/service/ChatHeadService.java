@@ -10,11 +10,13 @@ import androidx.core.app.NotificationCompat;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
 import jp.co.recruit.floatingview.R;
+import jp.co.recruit_lifestyle.android.floatingview.FloatingView;
 import jp.co.recruit_lifestyle.android.floatingview.FloatingViewListener;
 import jp.co.recruit_lifestyle.android.floatingview.FloatingViewManager;
 
@@ -116,6 +118,31 @@ public class ChatHeadService extends Service implements FloatingViewListener {
         } else {
             Log.d(TAG, getString(R.string.touch_finished_position, x, y));
         }
+    }
+
+    @Override
+    public void onFinished(FloatingView floatingView, int x, int y) {
+
+    }
+
+    @Override
+    public void onClick() {
+
+    }
+
+    @Override
+    public void onLongClick() {
+
+    }
+
+    @Override
+    public void onDoubleClick() {
+
+    }
+
+    @Override
+    public void onTouch(MotionEvent e) {
+
     }
 
     /**

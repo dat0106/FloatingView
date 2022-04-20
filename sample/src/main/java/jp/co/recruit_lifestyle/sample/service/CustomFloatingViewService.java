@@ -15,11 +15,13 @@ import androidx.core.app.NotificationCompat;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
 import jp.co.recruit.floatingview.R;
+import jp.co.recruit_lifestyle.android.floatingview.FloatingView;
 import jp.co.recruit_lifestyle.android.floatingview.FloatingViewListener;
 import jp.co.recruit_lifestyle.android.floatingview.FloatingViewManager;
 import jp.co.recruit_lifestyle.sample.DeleteActionActivity;
@@ -136,6 +138,31 @@ public class CustomFloatingViewService extends Service implements FloatingViewLi
             editor.putInt(PREF_KEY_LAST_POSITION_Y, y);
             editor.apply();
         }
+    }
+
+    @Override
+    public void onFinished(FloatingView floatingView, int x, int y) {
+
+    }
+
+    @Override
+    public void onClick() {
+
+    }
+
+    @Override
+    public void onLongClick() {
+
+    }
+
+    @Override
+    public void onDoubleClick() {
+
+    }
+
+    @Override
+    public void onTouch(MotionEvent e) {
+
     }
 
     /**

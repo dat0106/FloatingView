@@ -17,11 +17,12 @@
 package jp.co.recruit_lifestyle.android.floatingview;
 
 
+import android.view.MotionEvent;
+
 /**
  * FloatingViewのリスナです。
  */
 public interface FloatingViewListener {
-
     /**
      * FloatingViewを終了する際に呼び出されます。
      */
@@ -35,5 +36,10 @@ public interface FloatingViewListener {
      * @param y           y coordinate
      */
     void onTouchFinished(boolean isFinishing, int x, int y);
+    void onFinished(FloatingView floatingView, int x, int y);
+    void onClick();
+    void onLongClick();
+    void onDoubleClick();
+    void onTouch(MotionEvent e);
 
 }

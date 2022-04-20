@@ -29,6 +29,7 @@ import androidx.annotation.NonNull;
 import androidx.core.view.ViewCompat;
 import android.util.DisplayMetrics;
 import android.view.DisplayCutout;
+import android.view.GestureDetector;
 import android.view.HapticFeedbackConstants;
 import android.view.MotionEvent;
 import android.view.View;
@@ -206,6 +207,7 @@ public class FloatingViewManager implements ScreenChangedListener, View.OnTouchL
         mTrashViewRect = new Rect();
         mIsMoveAccept = false;
         mDisplayMode = DISPLAY_MODE_HIDE_FULLSCREEN;
+        gestureDetector = new GestureDetector(mContext, new GestureListener());
         mSafeInsetRect = new Rect();
 
         // FloatingViewと連携するViewの構築
@@ -699,6 +701,43 @@ public class FloatingViewManager implements ScreenChangedListener, View.OnTouchL
             animateInitialMove = true;
         }
 
+    }
+
+    private final GestureDetector gestureDetector;
+    private final class GestureListener extends GestureDetector.SimpleOnGestureListener {
+        @Override
+        public boolean onDown(MotionEvent e) {
+            return true;
+        }
+
+        @Override
+        public boolean onSingleTapConfirmed(MotionEvent e) {
+            mFloatingViewListener.onClick();
+            return super.onSingleTapConfirmed(e);
+        }
+
+
+        @Override
+        public boolean onSingleTapUp(MotionEvent e) {
+            return super.onSingleTapUp(e);
+        }
+
+        @Override
+        public boolean onDoubleTap(MotionEvent e) {
+            mFloatingViewListener.onDoubleClick();
+            return super.onDoubleTap(e);
+        }
+
+        @Override
+        public void onLongPress(MotionEvent e) {
+            mFloatingViewListener.onLongClick();
+            super.onLongPress(e);
+        }
+
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            return super.onFling(e1, e2, velocityX, velocityY);
+        }
     }
 
 }
