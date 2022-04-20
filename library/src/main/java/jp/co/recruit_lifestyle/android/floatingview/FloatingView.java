@@ -412,6 +412,12 @@ public class FloatingView extends FrameLayout implements ViewTreeObserver.OnPreD
         }
     }
 
+    public int getViewParentWidth() {
+        return mMetrics.widthPixels - mNavigationBarHorizontalOffset;
+    }
+    public int getViewParentHeight() {
+        return mMetrics.heightPixels - mStatusBarHeight + mNavigationBarVerticalOffset;
+    }
     /**
      * コンストラクタ
      *
