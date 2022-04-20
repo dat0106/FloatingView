@@ -36,6 +36,7 @@ import android.view.View;
 import android.view.WindowInsets;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -62,6 +63,7 @@ public class FloatingViewManager implements ScreenChangedListener, View.OnTouchL
      * フルスクリーン時に非表示にするモード
      */
     public static final int DISPLAY_MODE_HIDE_FULLSCREEN = 3;
+    private final Options options;
 
     /**
      * 表示モード
@@ -191,14 +193,18 @@ public class FloatingViewManager implements ScreenChangedListener, View.OnTouchL
      */
     private final ArrayList<FloatingView> mFloatingViewList;
 
-    /**
-     * コンストラクタ
-     *
-     * @param context  Context
-     * @param listener FloatingViewListener
-     */
     public FloatingViewManager(Context context, FloatingViewListener listener) {
+        this(context, listener, new Options());
+    }
+        /**
+         * コンストラクタ
+         *
+         * @param context  Context
+         * @param listener FloatingViewListener
+         */
+    public FloatingViewManager(Context context, FloatingViewListener listener, Options options) {
         mContext = context;
+        this.options = options;
         mResources = context.getResources();
         mWindowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         mDisplayMetrics = new DisplayMetrics();
@@ -303,6 +309,7 @@ public class FloatingViewManager implements ScreenChangedListener, View.OnTouchL
     @Override
     public void onTrashAnimationStarted(@TrashView.AnimationState int animationCode) {
         // クローズまたは強制クローズの場合はすべてのFloatingViewをタッチさせない
+        mTrashView.setVisibility(View.VISIBLE);
         if (animationCode == TrashView.ANIMATION_CLOSE || animationCode == TrashView.ANIMATION_FORCE_CLOSE) {
             final int size = mFloatingViewList.size();
             for (int i = 0; i < size; i++) {
@@ -330,7 +337,9 @@ public class FloatingViewManager implements ScreenChangedListener, View.OnTouchL
             final FloatingView floatingView = mFloatingViewList.get(i);
             floatingView.setDraggable(true);
         }
-
+        if (animationCode == TrashView.ANIMATION_CLOSE || animationCode == TrashView.ANIMATION_FORCE_CLOSE) {
+            mTrashView.setVisibility(View.GONE);
+        }
     }
 
     /**
@@ -338,6 +347,8 @@ public class FloatingViewManager implements ScreenChangedListener, View.OnTouchL
      */
     @Override
     public boolean onTouch(View v, MotionEvent event) {
+        mFloatingViewListener.onTouch(event);
+        gestureDetector.onTouchEvent(event);
         final int action = event.getAction();
 
         // 押下状態でないのに移動許可が出ていない場合はなにもしない(回転直後にACTION_MOVEが来て、FloatingViewが消えてしまう現象に対応)
@@ -509,6 +520,10 @@ public class FloatingViewManager implements ScreenChangedListener, View.OnTouchL
         mFullscreenObserverView.onGlobalLayout();
     }
 
+
+    public void addViewToWindow(View view) {
+        addViewToWindow(view, null);
+    }
     /**
      * ViewをWindowに貼り付けます。
      *
@@ -516,6 +531,9 @@ public class FloatingViewManager implements ScreenChangedListener, View.OnTouchL
      * @param options Options
      */
     public void addViewToWindow(View view, Options options) {
+        if(options == null) {
+            options = this.options;
+        }
         final boolean isFirstAttach = mFloatingViewList.isEmpty();
         // FloatingView
         final FloatingView floatingView = new FloatingView(mContext);
@@ -547,11 +565,28 @@ public class FloatingViewManager implements ScreenChangedListener, View.OnTouchL
         if (isFirstAttach) {
             mWindowManager.addView(mFullscreenObserverView, mFullscreenObserverView.getWindowLayoutParams());
             mTargetFloatingView = floatingView;
+            mTargetFloatingView.setOnFinishListener(new FloatingView.FinishListener() {
+                @Override
+                public void finished() {
+                    final WindowManager.LayoutParams params = mTargetFloatingView.getWindowLayoutParams();
+
+                    if(mFloatingViewListener!=null){
+                        mFloatingViewListener.onFinished(mTargetFloatingView, params.x, params.y);
+                    }
+                }
+            });
         } else {
             removeViewImmediate(mTrashView);
         }
         // 必ずトップに来て欲しいので毎回貼り付け
-        mWindowManager.addView(mTrashView, mTrashView.getWindowLayoutParams());
+        // Viewの貼り付け
+//        mWindowManager.addView(floatingView, floatingView.getWindowLayoutParams());
+        if(options.removeTrashView){
+            setTrashViewEnabled(false);
+        } else{
+            mWindowManager.addView(mTrashView, mTrashView.getWindowLayoutParams());
+        }
+
     }
 
     /**
@@ -685,6 +720,8 @@ public class FloatingViewManager implements ScreenChangedListener, View.OnTouchL
          * 初期表示時にアニメーションするフラグ
          */
         public boolean animateInitialMove;
+        public boolean removeTrashView;
+        public boolean avoidKeyBoard;
 
         /**
          * オプションのデフォルト値を設定します。
@@ -699,6 +736,8 @@ public class FloatingViewManager implements ScreenChangedListener, View.OnTouchL
             moveDirection = MOVE_DIRECTION_DEFAULT;
             usePhysics = true;
             animateInitialMove = true;
+            removeTrashView = false;
+            avoidKeyBoard = false;
         }
 
     }
