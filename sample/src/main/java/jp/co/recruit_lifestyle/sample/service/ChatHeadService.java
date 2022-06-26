@@ -229,6 +229,11 @@ public class ChatHeadService extends Service implements FloatingViewListener {
     }
 
     @Override
+    public void onStarted(FloatingView floatingView, int x, int y) {
+
+    }
+
+    @Override
     public void onClick() {
         Log.d(TAG, "onClick");
         pathMenuCustom.switchState();
