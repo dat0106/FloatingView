@@ -149,6 +149,7 @@ public class ChatHeadService extends Service implements FloatingViewListener {
         final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
         options.removeTrashView = false;
+        options.avoidKeyBoard = true;
         // Shape
         final String shapeSettings = sharedPref.getString("settings_shape", "");
         if ("Circle".equals(shapeSettings)) {

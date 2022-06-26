@@ -39,7 +39,7 @@ class FullscreenObserverView extends View implements ViewTreeObserver.OnGlobalLa
     /**
      * Overlay Type
      */
-    private static final int OVERLAY_TYPE;
+    private static int OVERLAY_TYPE;
 
     /**
      * WindowManager.LayoutParams
@@ -73,7 +73,7 @@ class FullscreenObserverView extends View implements ViewTreeObserver.OnGlobalLa
     /**
      * コンストラクタ
      */
-    FullscreenObserverView(Context context, ScreenChangedListener listener) {
+    FullscreenObserverView(Context context, ScreenChangedListener listener, boolean avoidKeyBoard) {
         super(context);
 
         // リスナーのセット
@@ -84,9 +84,17 @@ class FullscreenObserverView extends View implements ViewTreeObserver.OnGlobalLa
         mParams.width = 1;
         mParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
         mParams.type = OVERLAY_TYPE;
-        mParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
-                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE |
-                WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
+        if(avoidKeyBoard){
+            mParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE |
+                    WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM |
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
+        } else {
+            mParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE |
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
+        }
+
         mParams.format = PixelFormat.TRANSLUCENT;
 
         mWindowRect = new Rect();

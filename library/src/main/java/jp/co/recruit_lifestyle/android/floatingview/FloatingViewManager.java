@@ -191,7 +191,7 @@ public class FloatingViewManager implements ScreenChangedListener, View.OnTouchL
      * Windowに貼り付けられたFloatingViewのリスト
      * TODO:第2弾のFloatingViewの複数表示で意味を発揮する予定
      */
-    private final ArrayList<FloatingView> mFloatingViewList;
+    public final ArrayList<FloatingView> mFloatingViewList;
 
     public FloatingViewManager(Context context, FloatingViewListener listener) {
         this(context, listener, new Options());
@@ -218,7 +218,7 @@ public class FloatingViewManager implements ScreenChangedListener, View.OnTouchL
 
         // FloatingViewと連携するViewの構築
         mFloatingViewList = new ArrayList<>();
-        mFullscreenObserverView = new FullscreenObserverView(context, this);
+        mFullscreenObserverView = new FullscreenObserverView(context, this, options.avoidKeyBoard);
         mTrashView = new TrashView(context);
     }
 
