@@ -1052,7 +1052,7 @@ public class FloatingView extends FrameLayout implements ViewTreeObserver.OnPreD
      * @param goalPositionY 移動先のY座標
      * @param withAnimation アニメーションを行う場合はtrue.行わない場合はfalse
      */
-    private void moveTo(int currentX, int currentY, int goalPositionX, int goalPositionY, boolean withAnimation) {
+    public void moveTo(int currentX, int currentY, int goalPositionX, int goalPositionY, boolean withAnimation) {
         objectAnimation = false;
         physicsAnimationX = false;
         physicsAnimationY = false;
